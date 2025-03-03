@@ -3,6 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,23 +21,24 @@ public class MyThreadPool {
     private final List<Thread> coreList = new ArrayList<>();
     private final List<Thread> supportList = new ArrayList<>();
     private final RejectHandle rejectHandle;
-
+    private final ThreadFactory threadFactory;
     public BlockingQueue<Runnable> getBlockingQueue() {
         return blockingQueue;
     }
 
-    public MyThreadPool(int coreSize, int maxSize, int timeout, TimeUnit timeUnit, BlockingQueue<Runnable> blockingQueue, RejectHandle rejectHandle) {
+    public MyThreadPool(int coreSize, int maxSize, int timeout, TimeUnit timeUnit, BlockingQueue<Runnable> blockingQueue, RejectHandle rejectHandle, ThreadFactory threadFactory) {
         this.coreSize = coreSize;
         this.maxSize = maxSize;
         this.timeout = timeout;
         this.timeUnit = timeUnit;
         this.blockingQueue = blockingQueue;
         this.rejectHandle = rejectHandle;
+        this.threadFactory = threadFactory;
     }
 
     public void execute(Runnable command) {
         if (coreList.size() < coreSize) {
-            Thread coreThread = new CoreThread();
+            Thread coreThread = threadFactory.newThread(new CoreThread());
             coreList.add(coreThread);
             coreThread.start();
         }
@@ -44,7 +46,7 @@ public class MyThreadPool {
             return;
         }
         if (coreList.size() + supportList.size() < maxSize) {
-            Thread supportThread = new SupportThread();
+            Thread supportThread = threadFactory.newThread(new SupportThread());
             supportList.add(supportThread);
             supportThread.start();
         }
