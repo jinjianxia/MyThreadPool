@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @Description:
  */
 
-public class MyThreadPool {
+public class MyThreadPool implements IThreadPool {
     private final int coreSize;
     private final int maxSize;
     private final int timeout;
@@ -22,6 +22,7 @@ public class MyThreadPool {
     private final List<Thread> supportList = new ArrayList<>();
     private final RejectHandle rejectHandle;
     private final ThreadFactory threadFactory;
+
     public BlockingQueue<Runnable> getBlockingQueue() {
         return blockingQueue;
     }

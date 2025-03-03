@@ -1,5 +1,7 @@
 package org.example;
 
+import com.sun.org.apache.bcel.internal.generic.IADD;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -10,8 +12,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
     public static void main(String[] args) {
-
-        MyThreadPool myThreadPool = new MyThreadPool(2,
+        IThreadPool myThreadPool = new MyThreadPool(2,
                 4,
                 2,
                 TimeUnit.SECONDS,
