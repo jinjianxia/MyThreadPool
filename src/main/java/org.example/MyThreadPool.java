@@ -43,6 +43,7 @@ public class MyThreadPool implements IThreadPool {
             coreList.add(coreThread);
             coreThread.start();
         }
+        // 核心线程数量到上限了，优先加入阻塞队列。加入阻塞队列失败后，创建辅助线程
         if (blockingQueue.offer(command)) {
             return;
         }
